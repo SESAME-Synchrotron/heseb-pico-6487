@@ -1,0 +1,148 @@
+##########################################################################
+# Copyright (c) 2011 Lawrence Berkeley National Laboratory, Accelerator
+# Technology Group, Engineering Division
+# This code is distributed subject to a Software License Agreement found
+# in file LICENSE that is included with this distribution.
+##########################################################################
+
+@writetimeout { disconnect; }
+@replytimeout { disconnect; }
+@readtimeout  { disconnect; }
+@mismatch     { disconnect; }
+
+ReplyTimeout = 1200;
+InTerminator = "\r";
+OutTerminator = "\r";
+
+getIDN {
+    out "*IDN?";
+    in "%\$1[^\r\n]";
+    ExtraInput = Ignore;
+}
+cmd {
+    out "\$1";
+}
+
+setD {
+    out "\$1 %d";
+    @init { out "\$1?"; in "%d"; }
+}
+getD {
+    out "\$1?";
+    in "%d";
+    ExtraInput = Ignore;
+}
+
+setF {
+    out "\$1 %f";
+    @init { out "\$1?"; in "%f"; }
+}
+getF {
+    out "\$1?";
+    in "%f";
+    ExtraInput = Ignore;
+}
+
+setRange {
+    out "RANG 2E-%d";
+    @init { out "RANG?"; in "%*[^E]E-%d"; }
+}
+getRange {
+    out "RANG?";
+    in "%*[^E]E-%d";
+    ExtraInput = Ignore;
+}
+
+setFilterType {
+    out "\$1 %{MOV|REP}";
+    @init { out "\$1?"; in "%{MOV|REP}"; }
+}
+getFilterType {
+    out "\$1?";
+    in "%{MOV|REP}";
+    ExtraInput = Ignore;
+}
+
+setArmSource {
+    out "ARM:SOUR %{IMM|BUS|TIM|MAN|TLIN|NST|PST|BST}";
+    @init { out "ARM:SOUR?"; in "%{IMM|BUS|TIM|MAN|TLIN|NST|PST|BST}"; }
+}
+getArmSource {
+    out "ARM:SOUR?";
+    in "%{IMM|BUS|TIM|MAN|TLIN|NST|PST|BST}";
+    ExtraInput = Ignore;
+}
+setTriggerSource {
+    out "TRIG:SOUR %{IMM|TLIN}";
+    @init { out "TRIG:SOUR?"; in "%{IMM|TLIN}"; }
+}
+getTriggerSource {
+    out "TRIG:SOUR?";
+    in "%{IMM|TLIN}";
+    ExtraInput = Ignore;
+}
+cancel {
+    out "\030ABOR\r";
+    in "%*s";
+    ExtraInput = Ignore;
+}
+
+#
+# Measure current
+#
+measureCurrent {
+    ReplyTimeout = 5000;
+    Separator = ",";
+    out "READ?";
+    in "%f";
+    ExtraInput = Ignore;
+    @init { out "FORM:ELEM"; out "READ;CONF:CURR:DC"; }
+}
+fetchBuffered {
+    ReplyTimeout = 10000;
+    Separator = ",";
+    out "FETC?";
+    in "%f";
+    ExtraInput = Ignore;
+}
+
+#
+# Source
+#
+setIlimit {
+    out "SOUR:VOLT:ILIM 2.5E-%d";
+    @init { out "SOUR:VOLT:ILIM?"; in "2.5%*[^E]E-%d"; }
+}
+getIlimit {
+    out "SOUR:VOLT:ILIM?";
+    in "2.5%*[^E]E-%d";
+    ExtraInput = Ignore;
+}
+setSourceRange {
+    out "SOUR:VOLT:RANGE %d";
+    @init { out "SOUR:VOLT:RANGE?"; in "%{1.000000E+01|5.000000E+01|5.000000E+02}"; }
+}
+getSourceRange {
+    out "SOUR:VOLT:RANGE?";
+    in "%{1.000000E+01|5.000000E+01|5.000000E+02}";
+    ExtraInput = Ignore;
+}
+
+#
+# DAQ
+#
+startAcquisition {
+    ReplyTimeout = 10000;
+    separator = ",";
+    out "FORM:ELEM READ";
+    out "TRIG:COUN %(\$1)d";
+    out "TRAC:POIN %(\$1)d";
+    out "TRAC:FEED SENS";
+    out "TRAC:FEED:CONT NEXT";
+    out "SYST:ZCH OFF";
+    out "INIT";
+    out "TRAC:DATA?";
+    out "TRIG:COUN 1";
+    in  "%e";
+    ExtraInput = Ignore;
+}

@@ -1,0 +1,863 @@
+##########################################################################
+# Copyright (c) 2011 Lawrence Berkeley National Laboratory, Accelerator
+# Technology Group, Engineering Division
+# This code is distributed subject to a Software License Agreement found
+# in file LICENSE that is included with this distribution.
+##########################################################################
+
+#
+# Basic SCPI (IEEE488.2) commands
+#
+record(waveform, "$(P)$(R)IDN")
+{
+    field(DESC, "SCPI identification string")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getIDN(119) $(PORT)")
+    field(PINI, "YES")
+    field(FTVL, "CHAR")
+    field(NELM, "120")
+}
+record(bo, "$(P)$(R)RST")
+{
+    field(DESC, "SCPI Reset")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto cmd(*RST) $(PORT)")
+}
+record(bo, "$(P)$(R)CLS")
+{
+    field(DESC, "SCPI Clear status")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto cmd(*CLS) $(PORT)")
+}
+record(bo, "$(P)$(R)TRG")
+{
+    field(DESC, "SCPI trigger")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto cmd(*TRG) $(PORT)")
+}
+record(longin, "$(P)$(R)GetSTB")
+{
+    field(DESC, "SCPI get status byte")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getD(*STB) $(PORT)")
+}
+record(longin, "$(P)$(R)GetESR")
+{
+    field(DESC, "SCPI get event status")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getD(*ESR) $(PORT)")
+}
+record(longout, "$(P)$(R)SetESE")
+{
+    field(DESC, "SCPI enable event status")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setD(*ESE) $(PORT)")
+}
+record(longin, "$(P)$(R)GetESE")
+{
+    field(DESC, "SCPI enabled event status")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getD(*ESE) $(PORT)")
+}
+record(longout, "$(P)$(R)SetSRE")
+{
+    field(DESC, "SCPI enable service requests")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setD(*SRE) $(PORT)")
+}
+record(longin, "$(P)$(R)GetSRE")
+{
+    field(DESC, "Enabled service requests")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getD(*SRE) $(PORT)")
+}
+record(longin, "$(P)$(R)GetOPC")
+{
+    field(DESC, "Output completion status")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getD(*OPC) $(PORT)")
+}
+
+#
+# Unlock/Lock local controls
+#
+#record(bo, "$(P)$(R)KLOCK")
+#{
+#    field(DESC, "Lock out all local controls")
+#    field(DTYP, "stream")
+#    field(OUT,  "@keithley.proto setD(SYST:KLOCK) $(PORT)")
+#    field(ZNAM, "Unlocked")
+#    field(ONAM, "Locked")
+#    field(FLNK, "$(P)$(R)KLOCKRBV")
+#}
+record(bi, "$(P)$(R)KLOCKRBV")
+{
+    field(DESC, "All local controls locked?")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getD(SYST:KLOCK) $(PORT)")
+    field(ZNAM, "Unlocked")
+    field(ONAM, "Locked")
+    field(PINI, "YES")
+}
+
+#
+# Reading
+#
+record(ai, "$(P)$(R)Measure")
+{
+    field(DESC, "Measure current")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto measureCurrent $(PORT)")
+    field(EGU,  "A")
+    field(SCAN, "1 second")
+    field(PREC, "5")
+}
+record(waveform, "$(P)$(R)FetchWF")
+{
+    field(DESC, "Fetch buffered data")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto fetchBuffered $(PORT)")
+    field(EGU,  "A")
+    field(PREC, "5")
+    field(FTVL, "FLOAT")
+    field(NELM, "$(NELM=1000)")
+}
+
+#
+# Zero-check
+#
+record(bo, "$(P)$(R)ZeroCheck")
+{
+    field(DESC, "Disable/Enable zero check (input clamp)")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setD(SYST:ZCH) $(PORT)")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+    field(FLNK, "$(P)$(R)ZeroCheckRBV")
+}
+record(bi, "$(P)$(R)ZeroCheckRBV")
+{
+    field(DESC, "Disable/Enable zero check (input clamp)")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getD(SYST:ZCH) $(PORT)")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+    field(PINI, "YES")
+}
+
+#
+# Auto-Zero
+#
+record(bo, "$(P)$(R)AutoZero")
+{
+    field(DESC, "Disable/Enable Auto Zero")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setD(SYST:AZER) $(PORT)")
+    field(ZNAM, "Disable")
+    field(ONAM, "Enable")
+    field(VAL, "1")
+    field(FLNK, "$(P)$(R)AutoZeroRBV")
+}
+record(bi, "$(P)$(R)AutoZeroRBV")
+{
+    field(DESC, "Disable/Enable Auto Zero")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getD(SYST:AZER) $(PORT)")
+    field(ZNAM, "Disable")
+    field(ONAM, "Enable")
+    field(PINI, "YES")
+}
+
+#
+# Range
+#
+record(bo, "$(P)$(R)AutoRange")
+{
+    field(DESC, "Disable/Enable auto-range")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setD(RANG:AUTO) $(PORT)")
+    field(ZNAM, "Fixed")
+    field(ONAM, "Auto")
+    field(FLNK, "$(P)$(R)AutoRangeRBV")
+}
+record(bi, "$(P)$(R)AutoRangeRBV")
+{
+    field(DESC, "Disable/Enable auto-range")
+    field(DTYP, "stream")
+    field(SCAN, "1 second")
+    field(INP,  "@keithley.proto getD(RANG:AUTO) $(PORT)")
+    field(ZNAM, "Fixed")
+    field(ONAM, "Auto")
+    field(PINI, "YES")
+}
+record(mbbo, "$(P)$(R)Range")
+{
+    field(DESC, "Full-scale range")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setRange $(PORT)")
+    field(ZRVL, "9")
+    field(ZRST, "2 nA")
+    field(ONVL, "8")
+    field(ONST, "20 nA")
+    field(TWVL, "7")
+    field(TWST, "200 nA")
+    field(THVL, "6")
+    field(THST, "2 uA")
+    field(FRVL, "5")
+    field(FRST, "20 uA")
+    field(FVVL, "4")
+    field(FVST, "200 uA")
+    field(SXVL, "3")
+    field(SXST, "2 mA")
+    field(SVVL, "2")
+    field(SVST, "20 mA")
+    field(FLNK, "$(P)$(R)RangeRBV")
+}
+record(mbbi, "$(P)$(R)RangeRBV")
+{
+    field(DESC, "Full-scale range readback")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getRange $(PORT)")
+    field(ZRVL, "9")
+    field(ZRST, "2 nA")
+    field(ONVL, "8")
+    field(ONST, "20 nA")
+    field(TWVL, "7")
+    field(TWST, "200 nA")
+    field(THVL, "6")
+    field(THST, "2 uA")
+    field(FRVL, "5")
+    field(FRST, "20 uA")
+    field(FVVL, "4")
+    field(FVST, "200 uA")
+    field(SXVL, "3")
+    field(SXST, "2 mA")
+    field(SVVL, "2")
+    field(SVST, "20 mA")
+    field(PINI, "YES")
+}
+
+#
+# Filtering
+#
+record(ao, "$(P)$(R)IntegrationTime")
+{
+    field(DESC, "Reading integration time")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setF(NPLC) $(PORT)")
+    field(EGU,  "Cycles")
+    field(PREC, "2")
+    field(LOPR, "0.01")
+    field(HOPR, "50")
+    field(DRVL, "0.01")
+    field(DRVH, "50")
+    field(FLNK, "$(P)$(R)IntegrationTimeRBV")
+}
+record(ai, "$(P)$(R)IntegrationTimeRBV")
+{
+    field(DESC, "Reading integration time")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getF(NPLC) $(PORT)")
+    field(EGU,  "Cycles")
+    field(PREC, "2")
+    field(LOPR, "0.01")
+    field(HOPR, "50")
+    field(PINI, "YES")
+}
+record(longout, "$(P)$(R)AverageFilterCount")
+{
+    field(DESC, "Number of samples in reading")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setD(AVER:COUN) $(PORT)")
+    field(EGU,  "Samples")
+    field(VAL, "10")
+    field(LOPR, "2")
+    field(HOPR, "100")
+    field(DRVL, "2")
+    field(DRVH, "100")
+    field(SCAN, "Passive")
+    field(FLNK, "$(P)$(R)AverageFilterCountRBV")
+}
+record(longin, "$(P)$(R)AverageFilterCountRBV")
+{
+    field(DESC, "Number of samples in reading")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getD(AVER:COUN) $(PORT)")
+    field(EGU,  "Samples")
+    field(LOPR, "2")
+    field(HOPR, "100")
+    field(PINI, "YES")
+}
+record(bo, "$(P)$(R)AverageFilterEnable")
+{
+    field(DESC, "Disable/Enable Average filter")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setD(AVER) $(PORT)")
+    field(ZNAM, "Disable")
+    field(ONAM, "Enable")
+    field(FLNK, "$(P)$(R)AverageFilterEnableRBV")
+}
+record(bi, "$(P)$(R)AverageFilterEnableRBV")
+{
+    field(DESC, "Disable/Enable Average filter")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getD(AVER) $(PORT)")
+    field(ZNAM, "Disable")
+    field(ONAM, "Enable")
+    field(PINI, "YES")
+}
+record(bo, "$(P)$(R)MedianFilterEnable")
+{
+    field(DESC, "Disable/Enable Median filter")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setD(MED) $(PORT)")
+    field(ZNAM, "Disable")
+    field(ONAM, "Enable")
+    field(FLNK, "$(P)$(R)AverageFilterEnableRBV")
+}
+record(bi, "$(P)$(R)MedianFilterEnableRBV")
+{
+    field(DESC, "Disable/Enable Median filter")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getD(MED) $(PORT)")
+    field(ZNAM, "Disable")
+    field(ONAM, "Enable")
+    field(PINI, "YES")
+}
+record(ao, "$(P)$(R)MedianFilterRank")
+{
+    field(DESC, "Median Filter Rank")
+    field(DTYP, "stream")
+    field(OUT, "@keithley.proto setD(MED:RANK) $(PORT)")
+    field(LOPR, "1")
+    field(HOPR, "5")
+    field(DRVL, "1")
+    field(DRVH, "5")
+    field(FLNK, "$(P)$(R)MedianFilterRankRBV")
+
+}
+record(ai, "$(P)$(R)MedianFilterRankRBV")
+{
+    field(DESC, "Median Filter Rank Readback")
+    field(DTYP, "stream")
+    field(INP, "@keithley.proto getD(MED:RANK) $(PORT)")
+    field(LOPR, "1")
+    field(HOPR, "5")
+    field(PINI, "YES")
+}
+record(mbbo, "$(P)$(R)FilterType")
+{
+    field(DESC, "Filter Type")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setFilterType(AVER:TCON) $(PORT)")
+    field(ZRVL, "0")
+    field(ZRST, "MOV")
+    field(ONVL, "1")
+    field(ONST, "REP")
+    field(VAL, "1")
+    field(FLNK, "$(P)$(R)FilterTypeRBV")
+}
+record(mbbi, "$(P)$(R)FilterTypeRBV")
+{
+    field(DESC, "Filter Type readback")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getFilterType(AVER:TCON) $(PORT)")
+    field(ZRVL, "0")
+    field(ZRST, "MOV")
+    field(ONVL, "1")
+    field(ONST, "REP")
+    field(PINI, "YES")
+}
+record(bo, "$(P)$(R)Damping")
+{
+    field(DESC, "Disable/Enable damping")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setD(DAMP) $(PORT)")
+    field(ZNAM, "Disable")
+    field(ONAM, "Enable")
+    field(FLNK, "$(P)$(R)DampingRBV")
+}
+record(bi, "$(P)$(R)DampingRBV")
+{
+    field(DESC, "Disable/Enable damping")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getD(DAMP) $(PORT)")
+    field(ZNAM, "Disable")
+    field(ONAM, "Enable")
+    field(PINI, "YES")
+}
+
+#
+# Triggering
+#
+record(mbbo, "$(P)$(R)ArmSource")
+{
+    field(DESC, "Arm source")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setArmSource $(PORT)")
+    field(ZRVL, "0")
+    field(ZRST, "Immediate")
+    field(ONVL, "1")
+    field(ONST, "GPIB/Serial")
+    field(TWVL, "2")
+    field(TWST, "Timer")
+    field(THVL, "3")
+    field(THST, "Manual")
+    field(FRVL, "4")
+    field(FRST, "Trigger Link")
+    field(FVVL, "5")
+    field(FVST, "SOT falling")
+    field(SXVL, "6")
+    field(SXST, "SOT rising")
+    field(SVVL, "7")
+    field(SVST, "SOT transition")
+    field(FLNK, "$(P)$(R)ArmSourceRBV")
+}
+record(mbbi, "$(P)$(R)ArmSourceRBV")
+{
+    field(DESC, "Arm source readback")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getArmSource $(PORT)")
+    field(ZRVL, "0")
+    field(ZRST, "Immediate")
+    field(ONVL, "1")
+    field(ONST, "GPIB/Serial")
+    field(TWVL, "2")
+    field(TWST, "Timer")
+    field(THVL, "3")
+    field(THST, "Manual")
+    field(FRVL, "4")
+    field(FRST, "Trigger Link")
+    field(FVVL, "5")
+    field(FVST, "SOT falling")
+    field(SXVL, "6")
+    field(SXST, "SOT rising")
+    field(SVVL, "7")
+    field(SVST, "SOT transition")
+    field(PINI, "YES")
+}
+record(mbbo, "$(P)$(R)ArmLine")
+{
+    field(DESC, "TLINK arm line")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setD(ARM:ILIN) $(PORT)")
+    field(ONVL, "1")
+    field(ONST, " TLink 1")
+    field(TWVL, "2")
+    field(TWST, " TLink 2")
+    field(THVL, "3")
+    field(THST, " TLink 3")
+    field(FRVL, "4")
+    field(FRST, " TLink 4")
+    field(FVVL, "5")
+    field(FVST, " TLink 5")
+    field(SXVL, "6")
+    field(SXST, " TLink 6")
+    field(FLNK, "$(P)$(R)ArmLineRBV")
+}
+record(mbbi, "$(P)$(R)ArmLineRBV")
+{
+    field(DESC, "TLINK arm line")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getD(ARM:ILIN) $(PORT)")
+    field(ONVL, "1")
+    field(ONST, " TLink 1")
+    field(TWVL, "2")
+    field(TWST, " TLink 2")
+    field(THVL, "3")
+    field(THST, " TLink 3")
+    field(FRVL, "4")
+    field(FRST, " TLink 4")
+    field(FVVL, "5")
+    field(FVST, " TLink 5")
+    field(SXVL, "6")
+    field(SXST, " TLink 6")
+    field(PINI, "YES")
+}
+record(ao, "$(P)$(R)ArmTimerInterval")
+{
+    field(DESC, "Arm timer interval")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setF(ARM:TIM) $(PORT)")
+    field(EGU,  "s")
+    field(PREC, "5")
+    field(LOPR, "0")
+    field(HOPR, "1e5")
+    field(DRVL, "0.001")
+    field(DRVH, "99999.999")
+    field(FLNK, "$(P)$(R)ArmTimerIntervalRBV")
+}
+record(ai, "$(P)$(R)ArmTimerIntervalRBV")
+{
+    field(DESC, "Arm timer interval")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getF(ARM:TIM) $(PORT)")
+    field(EGU,  "s")
+    field(PREC, "5")
+    field(LOPR, "0")
+    field(HOPR, "1e5")
+    field(PINI, "YES")
+}
+record(longout, "$(P)$(R)ArmCount")
+{
+    field(DESC, "Arm count")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setD(ARM:COUN) $(PORT)")
+    field(LOPR, "1")
+    field(HOPR, "2048")
+    field(DRVL, "1")
+    field(DRVH, "2048")
+    field(FLNK, "$(P)$(R)ArmCountRBV")
+}
+record(longin, "$(P)$(R)ArmCountRBV")
+{
+    field(DESC, "Arm count")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getD(ARM:COUN) $(PORT)")
+    field(LOPR, "1")
+    field(HOPR, "2048")
+    field(PINI, "YES")
+}
+record(mbbo, "$(P)$(R)TriggerSource")
+{
+    field(DESC, "Trigger source")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setTriggerSource $(PORT)")
+    field(ZRVL, "0")
+    field(ZRST, "Immediate")
+    field(ONVL, "1")
+    field(ONST, "Trigger Link")
+    field(FLNK, "$(P)$(R)TriggerSourceRBV")
+}
+record(mbbi, "$(P)$(R)TriggerSourceRBV")
+{
+    field(DESC, "Trigger source readback")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getTriggerSource $(PORT)")
+    field(ZRVL, "0")
+    field(ZRST, "Immediate")
+    field(ONVL, "1")
+    field(ONST, "Trigger Link")
+    field(PINI, "YES")
+}
+record(mbbo, "$(P)$(R)TriggerLine")
+{
+    field(DESC, "TLINK trigger line")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setD(TRIG:ILIN) $(PORT)")
+    field(ONVL, "1")
+    field(ONST, " TLink 1")
+    field(TWVL, "2")
+    field(TWST, " TLink 2")
+    field(THVL, "3")
+    field(THST, " TLink 3")
+    field(FRVL, "4")
+    field(FRST, " TLink 4")
+    field(FVVL, "5")
+    field(FVST, " TLink 5")
+    field(SXVL, "6")
+    field(SXST, " TLink 6")
+    field(FLNK, "$(P)$(R)TriggerLineRBV")
+}
+record(mbbi, "$(P)$(R)TriggerLineRBV")
+{
+    field(DESC, "TLINK trigger line")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getD(TRIG:ILIN) $(PORT)")
+    field(ONVL, "1")
+    field(ONST, " TLink 1")
+    field(TWVL, "2")
+    field(TWST, " TLink 2")
+    field(THVL, "3")
+    field(THST, " TLink 3")
+    field(FRVL, "4")
+    field(FRST, " TLink 4")
+    field(FVVL, "5")
+    field(FVST, " TLink 5")
+    field(SXVL, "6")
+    field(SXST, " TLink 6")
+    field(PINI, "YES")
+}
+record(ao, "$(P)$(R)TriggerDelay")
+{
+    field(DESC, "Trigger Delay")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setF(TRIG:DEL) $(PORT)")
+    field(EGU,  "s")
+    field(PREC, "5")
+    field(LOPR, "0")
+    field(HOPR, "1000")
+    field(DRVL, "0")
+    field(DRVH, "999.9998")
+    field(FLNK, "$(P)$(R)TriggerDelayRBV")
+}
+record(ai, "$(P)$(R)TriggerDelayRBV")
+{
+    field(DESC, "Trigger Delay")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getF(TRIG:DEL) $(PORT)")
+    field(EGU,  "s")
+    field(PREC, "5")
+    field(LOPR, "0")
+    field(HOPR, "1000")
+    field(PINI, "YES")
+}
+record(bo, "$(P)$(R)TriggerDelayAuto")
+{
+    field(DESC, "Disable/Enable trigger autodelay")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setD(TRIG:DEL:AUTO) $(PORT)")
+    field(ZNAM, "Fixed")
+    field(ONAM, "Auto")
+    field(FLNK, "$(P)$(R)TriggerDelayAutoRBV")
+}
+record(bi, "$(P)$(R)TriggerDelayAutoRBV")
+{
+    field(DESC, "Disable/Enable trigger autodelay")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getD(TRIG:DEL:AUTO) $(PORT)")
+    field(ZNAM, "Fixed")
+    field(ONAM, "Auto")
+    field(PINI, "YES")
+}
+record(longout, "$(P)$(R)TriggerCount")
+{
+    field(DESC, "Trigger count")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setD(TRIG:COUN) $(PORT)")
+    field(LOPR, "1")
+    field(HOPR, "2048")
+    field(DRVL, "1")
+    field(DRVH, "2048")
+    field(FLNK, "$(P)$(R)TriggerCountRBV")
+}
+record(longin, "$(P)$(R)TriggerCountRBV")
+{
+    field(DESC, "Trigger count")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getD(TRIG:COUN) $(PORT)")
+    field(LOPR, "1")
+    field(HOPR, "2048")
+    field(PINI, "YES")
+}
+record(bo, "$(P)$(R)Start")
+{
+    field(DESC, "SCPI Reset")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto cmd(INIT) $(PORT)")
+}
+record(bo, "$(P)$(R)Cancel")
+{
+    field(DESC, "Cancel trigger sequence")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto cancel $(PORT)")
+}
+
+#
+# The MEASure? command resets a bunch of trigger settings.
+# This sequence record will restore them.
+#
+record(seq, "$(P)$(R)RestoreTriggerSettings")
+{
+    field(DESC, "Restore trigger settings after MEASure?")
+    field(LNK1, "$(P)$(R)ArmSource.PROC")
+    field(LNK2, "$(P)$(R)ArmCount.PROC")
+    field(LNK3, "$(P)$(R)TriggerSource.PROC")
+    field(LNK6, "$(P)$(R)TriggerCount.PROC")
+    field(LNK5, "$(P)$(R)TriggerDelayAuto.PROC")
+    field(LNK4, "$(P)$(R)TriggerDelay.PROC")
+}
+record(seq, "$(P)$(R)ReadTriggerSettings")
+{
+    field(DESC, "Read back trigger settings")
+    field(LNK1, "$(P)$(R)ArmSourceRBV.PROC")
+    field(LNK2, "$(P)$(R)ArmLineRBV.PROC")
+    field(LNK3, "$(P)$(R)ArmTimerIntervalRBV.PROC")
+    field(LNK4, "$(P)$(R)ArmCountRBV.PROC")
+    field(LNK5, "$(P)$(R)TriggerSourceRBV.PROC")
+    field(LNK6, "$(P)$(R)TriggerLineRBV.PROC")
+    field(LNK7, "$(P)$(R)TriggerDelayRBV.PROC")
+    field(LNK8, "$(P)$(R)TriggerDelayAutoRBV.PROC")
+    field(LNK9, "$(P)$(R)TriggerCountRBV.PROC")
+}
+
+#
+# Voltage source
+#
+record(bo, "$(P)$(R)SourceEnable")
+{
+    field(DESC, "Disable/Enable voltage source")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setD(SOUR:VOLT:STAT) $(PORT)")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+    field(FLNK, "$(P)$(R)SourceEnableRBV")
+}
+record(bi, "$(P)$(R)SourceEnableRBV")
+{
+    field(DESC, "Voltage source enabled?")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getD(SOUR:VOLT:STAT) $(PORT)")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+    field(PINI, "YES")
+}
+record(bo, "$(P)$(R)SourceInterlock")
+{
+    field(DESC, "Disable/Enable interlock")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setD(SOUR:VOLT:INT) $(PORT)")
+    field(ZNAM, "Disable")
+    field(ONAM, "Enable")
+    field(FLNK, "$(P)$(R)SourceInterlockRBV")
+}
+record(bi, "$(P)$(R)SourceInterlockRBV")
+{
+    field(DESC, "Interlock status")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getD(SOUR:VOLT:INT) $(PORT)")
+    field(ONAM, "Good")
+    field(ZNAM, "Broken")
+    field(PINI, "YES")
+}
+record(mbbo, "$(P)$(R)SourceRange")
+{
+    field(DESC, "Full-scale range")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setSourceRange $(PORT)")
+    field(ZRVL, "10")
+    field(ZRST, "10 V")
+    field(ONVL, "50")
+    field(ONST, "50 V")
+    field(TWVL, "500")
+    field(TWST, "500 V")
+    field(FLNK, "$(P)$(R)SourceRangeRBV")
+}
+record(mbbi, "$(P)$(R)SourceRangeRBV")
+{
+    field(DESC, "Full-scale range readback")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getSourceRange $(PORT)")
+    field(ZRVL, "0")
+    field(ZRST, "10 V")
+    field(ONVL, "1")
+    field(ONST, "50 V")
+    field(TWVL, "2")
+    field(TWST, "500 V")
+}
+record(mbbo, "$(P)$(R)SourceIlimit")
+{
+    field(DESC, "Source current limit")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setIlimit $(PORT)")
+    field(ZRVL, "5")
+    field(ZRST, "25 uA")
+    field(ONVL, "4")
+    field(ONST, "250 uA")
+    field(TWVL, "3")
+    field(TWST, "2.5 mA")
+    field(THVL, "2")
+    field(THST, "25 mA")
+    field(FLNK, "$(P)$(R)SourceIlimitRBV")
+}
+record(mbbi, "$(P)$(R)SourceIlimitRBV")
+{
+    field(DESC, "Source current limit")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getIlimit $(PORT)")
+    field(ZRVL, "5")
+    field(ZRST, "25 uA")
+    field(ONVL, "4")
+    field(ONST, "250 uA")
+    field(TWVL, "3")
+    field(TWST, "2.5 mA")
+    field(THVL, "2")
+    field(THST, "25 mA")
+    field(PINI, "YES")
+}
+record(ao, "$(P)$(R)SourceVoltage")
+{
+    field(DESC, "Source voltage setpoint")
+    field(DTYP, "stream")
+    field(OUT,  "@keithley.proto setF(SOUR:VOLT) $(PORT)")
+    field(EGU,  "V")
+    field(PREC, "5")
+    field(LOPR, "-505")
+    field(HOPR, "505")
+    field(DRVL, "-505")
+    field(DRVH, "505")
+    field(FLNK, "$(P)$(R)SourceVoltageRBV")
+}
+record(ai, "$(P)$(R)SourceVoltageRBV")
+{
+    field(DESC, "Source voltage readback")
+    field(DTYP, "stream")
+    field(INP,  "@keithley.proto getF(SOUR:VOLT) $(PORT)")
+    field(EGU,  "V")
+    field(PREC, "5")
+    field(LOPR, "-505")
+    field(HOPR, "505")
+    field(PINI, "YES")
+}
+record(seq, "$(P)$(R)SourceReadSettings")
+{
+    field(DESC, "Read back source settings")
+    field(LNK1, "$(P)$(R)SourceVoltageRBV.PROC")
+    field(LNK2, "$(P)$(R)SourceEnableRBV.PROC")
+    field(LNK3, "$(P)$(R)SourceInterlockRBV.PROC")
+    field(LNK4, "$(P)$(R)SourceIlimitRBV.PROC")
+    field(LNK5, "$(P)$(R)SourceRangeRBV.PROC")
+}
+
+#
+# DAQ
+#
+record(waveform, "$(P)$(R)Acquire")
+{
+    field(DESC, "Start Acquiring data")
+    field(DTYP, "stream")
+    field(INP, "@keithley.proto startAcquisition($(P)$(R)NumSampleSteps) $(PORT)")
+    field(NELM, "1000")
+    #field(PREC, "6")
+    field(FTVL, "FLOAT")
+}
+
+record(ai, "$(P)$(R)NumSampleSteps")
+{
+    field(DESC, "Number Of Sample Steps")
+    field(LOPR, "1")
+    field(HOPR, "1000")
+    field(VAL, "1")
+}
+
+record(ai, "$(P)$(R)TimePerSampleStep")
+{
+    field(DESC, "Time Per Sample Step")
+    field(PREC, "7")
+}
+
+record(transform, "$(P)$(R)CalcTimePerSampleStep")
+{
+    field(DESC, "Calc Time Per Sample Step")
+    field(INPA, "$(P)$(R)AutoZeroRBV CP")
+    field(INPB, "$(P)$(R)IntegrationTimeRBV CP")
+    field(INPC, "$(P)$(R)AverageFilterCountRBV CP")
+    field(INPD, "$(P)$(R)AverageFilterEnableRBV CP")
+    field(CLCE, "A ? 3 : 1")
+    field(CLCF, "D ? C * 1.0285 : 1")
+    field(CLCG, "E * (B / 50) * F + 0.0076172")
+    field(OUTG, "$(P)$(R)TimePerSampleStep")
+}
+
+record(transform, "$(P)$(R)CalcNumberOfSamplesPerStep")
+{
+    field(DESC, "Calc number of samples per step")
+    field(INPA, "$(P)$(R)AutoZeroRBV CP")
+    field(INPB, "$(P)$(R)IntegrationTimeRBV CP")
+    field(INPC, "$(P)$(R)TimePerSampleStep CP")
+    field(CLCD, "A ? 3 : 1")
+    field(CLCE, "((C-0.0076162) * 50) / (D * B * 1.0285)")
+    field(OUTE, "$(P)$(R)AverageFilterCount")
+    field(OUTF, "$(P)$(R)AverageFilterCount.PROC 1")
+}
+
