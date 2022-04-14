@@ -10,7 +10,7 @@
 @readtimeout  { disconnect; }
 @mismatch     { disconnect; }
 
-ReplyTimeout = 1200;
+ReplyTimeout = 11200;
 InTerminator = "\r";
 OutTerminator = "\r";
 

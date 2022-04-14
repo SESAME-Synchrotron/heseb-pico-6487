@@ -287,6 +287,7 @@ record(longin, "$(P)$(R)AverageFilterCountRBV")
     field(LOPR, "2")
     field(HOPR, "100")
     field(PINI, "YES")
+    #field(FLNK, "$(P)$(R)Acquire")
 }
 record(bo, "$(P)$(R)AverageFilterEnable")
 {
@@ -812,12 +813,13 @@ record(seq, "$(P)$(R)SourceReadSettings")
 #
 # DAQ
 #
-record(waveform, "$(P)$(R)Acquire")
+record(aai, "$(P)$(R)Acquire")
 {
     field(DESC, "Start Acquiring data")
     field(DTYP, "stream")
     field(INP, "@keithley.proto startAcquisition($(P)$(R)NumSampleSteps) $(PORT)")
-    field(NELM, "1000")
+    field(NELM, "1")
+    #field(SCAN, "passive")
     #field(PREC, "6")
     field(FTVL, "FLOAT")
 }
@@ -830,10 +832,23 @@ record(ai, "$(P)$(R)NumSampleSteps")
     field(VAL, "1")
 }
 
-record(ai, "$(P)$(R)TimePerSampleStep")
+record(ao, "$(P)$(R)TimePerSampleStep")
 {
     field(DESC, "Time Per Sample Step")
     field(PREC, "7")
+    field(VAL, "0.131037")
+    field(SCAN, "1 second")
+    field(FLNK, "$(P)$(R)TimePerSampleStepRBV")
+}
+
+record(ai, "$(P)$(R)TimePerSampleStepRBV")
+{
+    field(DESC, "Time Per Sample Step")
+    field(PREC, "7")
+    field(SCAN, "1 second")
+    field(INP, "$(P)$(R)TimePerSampleStep")
+    field(PINI, "YES")
+    #field(FLNK, "$(P)$(R)Acquire")
 }
 
 record(transform, "$(P)$(R)CalcTimePerSampleStep")
@@ -841,7 +856,7 @@ record(transform, "$(P)$(R)CalcTimePerSampleStep")
     field(DESC, "Calc Time Per Sample Step")
     field(INPA, "$(P)$(R)AutoZeroRBV CP")
     field(INPB, "$(P)$(R)IntegrationTimeRBV CP")
-    field(INPC, "$(P)$(R)AverageFilterCountRBV CP")
+    field(INPC, "$(P)$(R)AverageFilterCountRBV")
     field(INPD, "$(P)$(R)AverageFilterEnableRBV CP")
     field(CLCE, "A ? 3 : 1")
     field(CLCF, "D ? C * 1.0285 : 1")
