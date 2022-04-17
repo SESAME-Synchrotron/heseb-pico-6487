@@ -829,6 +829,16 @@ record(ai, "$(P)$(R)NumSampleSteps")
     field(LOPR, "1")
     field(HOPR, "1000")
     field(VAL, "1")
+    field(FLNK, "$(P)$(R)NumSampleStepsRBV")
+}
+
+record(ai, "$(P)$(R)NumSampleStepsRBV")
+{
+    field(DESC, "Number Of Sample Steps readback")
+    field(PREC, "7")
+    field(SCAN, "1 second")
+    field(INP, "$(P)$(R)NumSampleSteps")
+    field(PINI, "YES")
 }
 
 record(ao, "$(P)$(R)TimePerSampleStep")
@@ -842,7 +852,7 @@ record(ao, "$(P)$(R)TimePerSampleStep")
 
 record(ai, "$(P)$(R)TimePerSampleStepRBV")
 {
-    field(DESC, "Time Per Sample Step")
+    field(DESC, "Time Per Sample Step readback")
     field(PREC, "7")
     field(SCAN, "1 second")
     field(INP, "$(P)$(R)TimePerSampleStep")
