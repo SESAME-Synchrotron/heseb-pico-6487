@@ -4,7 +4,6 @@ This IOC controls Keithley picoammeter Model 6487
 
 The IOC gives the user full control over what filters to turn on, number fo samples to consider per time step, and the time per sample step.
 
----------------------
 ## PV List
 The following are some of the important PVs $`^1`$:
 | PV Name | Description |
@@ -32,7 +31,6 @@ _(4) Damping reduces noise from input capacitance. Maybe caused by long input ca
 
 _(*) Average and Median filters stabilizes noise measurements caused by noisy input signals_
 
----------------------
 ## Calculations
 Some of the PVs above are connected with the following equation:
 
@@ -44,7 +42,6 @@ Note That the green section collapses to 1 when average filter is disabled.
 
 Also the factor 3 $`\color{red}(in\ red)`$ collapses to 1 when AutoZero is disabled.
 
----------------------
 ## Aqcuiring Data
 The PV that fires the calculation process is K6487:1:Acquire.
 
@@ -54,6 +51,5 @@ All filters that are enabled will be used in this process. For example if both _
 
 After the process finishes you can read the result by running: **caget K6487:1:Acquire**
 
----------------------
 ## Reference
 For **full** reference, you can refer to the documentation in project source
