@@ -34,11 +34,11 @@ _(*) Average and Median filters stabilizes noise measurements caused by noisy in
 ## Calculations
 Some of the PVs above are connected with the following equation:
 
-$`\begingroup\color{red}3\endgroup * \frac{NPLC}{50} * \color{green}(NumSamples * 1.0285) + \color{blue}\epsilon`$
+$`Time For One Sample Step = \begingroup\color{red}3\endgroup * \frac{NPLC}{50} * \color{green}(NumSamples * 1.0285) + \color{blue}\epsilon`$
 
 where $`\color{blue}\epsilon = 0.0076172`$
 
-Note That the green section collapses to 1 when average filter is disabled.
+Note That the $`\color{green}green`$ section collapses to 1 when average filter is disabled.
 
 Also the factor 3 $`\color{red}(in\ red)`$ collapses to 1 when AutoZero is disabled.
 
