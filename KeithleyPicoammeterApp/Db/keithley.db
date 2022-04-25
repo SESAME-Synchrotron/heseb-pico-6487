@@ -356,6 +356,7 @@ record(mbbo, "$(P)$(R)FilterType")
     field(ONVL, "1")
     field(ONST, "REP")
     field(VAL, "1")
+    field(PINI, "YES")
     field(FLNK, "$(P)$(R)FilterTypeRBV")
 }
 record(mbbi, "$(P)$(R)FilterTypeRBV")
