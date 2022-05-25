@@ -43,6 +43,11 @@ getF {
     ExtraInput = Ignore;
 }
 
+reset {
+    out "*RST";
+    out "AVER:TCON REP";
+}
+
 setRange {
     out "RANG 2E-%d";
     @init { out "RANG?"; in "%*[^E]E-%d"; }

@@ -21,7 +21,7 @@ record(bo, "$(P)$(R)RST")
 {
     field(DESC, "SCPI Reset")
     field(DTYP, "stream")
-    field(OUT,  "@keithley.proto cmd(*RST) $(PORT)")
+    field(OUT,  "@keithley.proto reset $(PORT)")
 }
 record(bo, "$(P)$(R)CLS")
 {
