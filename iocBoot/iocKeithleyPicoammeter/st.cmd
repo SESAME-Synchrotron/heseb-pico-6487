@@ -29,7 +29,7 @@ drvAsynIPPortConfigure("L0","$(K6487_ADDRESS)",0,0,0)
 ###############################################################################
 # Load record instances
 dbLoadRecords ("db/keithley.db" "P=$(P),R=1:,PORT=L0,NELM=1000")
-dbLoadRecords ("db/asynRecord.db" "P=$(P),R=asyn,PORT=L0,ADDR=-1,OMAX=0,IMAX=0")
+#dbLoadRecords ("db/asynRecord.db" "P=$(P),R=asyn,PORT=L0,ADDR=-1,OMAX=0,IMAX=0")
 
 ###############################################################################
 # Start IOC
