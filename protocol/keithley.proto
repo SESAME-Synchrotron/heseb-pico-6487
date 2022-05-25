@@ -55,7 +55,7 @@ getRange {
 
 setFilterType {
     out "\$1 %{MOV|REP}";
-    @init { out "\$1?"; in "%{MOV|REP}"; }
+    @init { out "\$1 REP"; }
 }
 getFilterType {
     out "\$1?";
@@ -140,7 +140,9 @@ startAcquisition {
     out "TRAC:FEED SENS";
     out "TRAC:FEED:CONT NEXT";
     out "SYST:ZCH OFF";
+    out "AVER 1";
     out "INIT";
+    out "AVER 0";
     out "TRAC:DATA?";
     out "TRIG:COUN 1";
     in  "%e";
