@@ -3,7 +3,7 @@
 ###############################################################################
 # Set up environment
 epicsEnvSet("P","$(P=K6487:)")
-epicsEnvSet("K6487_ADDRESS","$(K6487_ADDRESS=10.1.50.19:30000)")
+epicsEnvSet("K6487_ADDRESS","$(K6487_ADDRESS=10.3.4.70:30000)")
 epicsEnvSet("K6487_PROTOCOL","$(K6487_PROTOCOL=COM)")
 epicsEnvSet("STREAM_PROTOCOL_PATH", "protocol")
 < envPaths
