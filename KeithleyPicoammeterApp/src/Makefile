@@ -23,7 +23,7 @@ KeithleyPicoammeter_DBD += drvAsynIPPort.dbd
 KeithleyPicoammeter_DBD += drvAsynSerialPort.dbd
 KeithleyPicoammeter_DBD += stream.dbd
 KeithleyPicoammeter_DBD += transformRecord.dbd
-
+KeithleyPicoammeter_DBD += iocAdmin.dbd
 
 # Add all the support libraries needed by this IOC
 #KeithleyPicoammeter_LIBS += xxx

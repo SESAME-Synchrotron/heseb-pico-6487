@@ -6,6 +6,7 @@ epicsEnvSet("P","$(P=K6487:)")
 epicsEnvSet("K6487_ADDRESS","$(K6487_ADDRESS=10.3.4.70:30000)")
 epicsEnvSet("K6487_PROTOCOL","$(K6487_PROTOCOL=COM)")
 epicsEnvSet("STREAM_PROTOCOL_PATH", "protocol")
+epicsEnvSet("IOC_PREFIX", "K6487")
 < envPaths
 cd "${TOP}"
 
@@ -29,6 +30,7 @@ drvAsynIPPortConfigure("L0","$(K6487_ADDRESS)",0,0,0)
 ###############################################################################
 # Load record instances
 dbLoadRecords ("db/keithley.db" "P=$(P),R=1:,PORT=L0,NELM=1000")
+dbLoadRecords ("db/iocAdminSoft.db", "IOC=$(IOC_PREFIX)")
 #dbLoadRecords ("db/asynRecord.db" "P=$(P),R=asyn,PORT=L0,ADDR=-1,OMAX=0,IMAX=0")
 
 ###############################################################################

@@ -13,6 +13,7 @@ include $(TOP)/configure/CONFIG
 #DB += xxx.db
 DB += keithley.db
 DB_INSTALLS += $(ASYN)/db/asynRecord.db
+DB_INSTALLS += $(IOCSTATS)/db/iocAdminSoft.db
 
 #----------------------------------------------------
 # If <anyname>.db template is not named <anyname>*.template add
